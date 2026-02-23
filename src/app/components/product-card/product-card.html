@@ -1,20 +1,30 @@
 <div
-  class="bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full relative"
+  class="bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full relative transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl"
 >
   <img
     [src]="product().imageUrl"
     [alt]="product().name"
     class="w-full h-75 object-cover rounded-t-xl"
+    [routerLink]="['/product', product().id]"
+    [style.view-transition-name]="'product-image-' + product().id"
   />
 
   <ng-content></ng-content>
 
   <div class="p-5 flex flex-col flex-1">
-    <h3 class="text-lg font-semibold text-gray-900 mb-2 leading-tight">{{ product().name }}</h3>
-    <p class="text-sm text-gray-600 mb-4 flex-1 leading-relaxed">
+    <h3
+      class="text-lg font-semibold text-gray-900 mb-2 leading-tight"
+      [routerLink]="['/product', product().id]"
+    >
+      {{ product().name }}
+    </h3>
+    <p
+      class="text-sm text-gray-600 mb-4 flex-1 leading-relaxed"
+      [routerLink]="['/product', product().id]"
+    >
       {{ product().description }}
     </p>
-    <div class="text-sm font-medium mb-4">
+    <div class="text-sm font-medium mb-4" [routerLink]="['/product', product().id]">
       {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
     </div>
 
