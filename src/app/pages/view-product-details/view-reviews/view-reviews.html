@@ -1,0 +1,14 @@
+<div appViewPanel>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Customer Reviews</h2>
+  </div>
+
+  <app-rating-summary [product]="product()"></app-rating-summary>
+
+  <div class="flex flex-col gap-6">
+    @for (review of product().reviews; track review.id) {
+      <app-view-review-items [review]="review"></app-view-review-items> 
+    }
+  </div>
+
+</div>
