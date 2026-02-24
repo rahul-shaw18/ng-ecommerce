@@ -1,3 +1,4 @@
+import { WriteReview } from './pages/view-product-details/write-review/write-review';
 import { CartItem } from './models/cart';
 import { computed, inject } from '@angular/core';
 import { Product } from './models/product';
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 import { Order } from './models/order';
 
 import { withStorageSync } from '@angular-architects/ngrx-toolkit';
+import { AddReviewParams, UserReview } from './models/user-reviews';
 
 export type EcommerceStore = {
   products: Product[];
@@ -27,6 +29,8 @@ export type EcommerceStore = {
 
   loading: boolean;
   selectedProductId: string | undefined;
+
+  writeReview: boolean;
 };
 
 export const EcommerceStore = signalStore(
@@ -504,6 +508,7 @@ export const EcommerceStore = signalStore(
     user: undefined,
     loading: false,
     selectedProductId: undefined,
+    writeReview: false,
   } as EcommerceStore),
 
   // withStorageSync({
@@ -691,6 +696,49 @@ export const EcommerceStore = signalStore(
       signOut() {
         patchState(store, { user: undefined });
         toaster.success(`You have been signed out.`);
+      },
+
+      showWriteReview() {
+        patchState(store, { writeReview: true });
+      },
+
+      hideWriteReview() {
+        patchState(store, { writeReview: false });
+      },
+
+      async addReview({ title, comment, rating }: AddReviewParams) {
+        patchState(store, { loading: true });
+
+        const product = store.products().find((p) => p.id === store.selectedProductId());
+
+        if (!product) {
+          toaster.error('Product not found.');
+          patchState(store, { loading: false });
+          return;
+        }
+
+        const review: UserReview = {
+          id: `R${Date.now()}`,
+          title,
+          comment,
+          rating,
+          productId: product.id,
+          userName: store.user()?.name || '',
+          userImageUrl: store.user()?.imageUrl || '',
+          reviewDate: new Date(),
+        };
+
+        const updateProduct = {
+          ...product,
+          reviews: [...product.reviews, review],
+        };
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        patchState(store, {
+          products: store.products().map((p) => (p.id === product.id ? updateProduct : p)),
+          loading: false,
+          writeReview: false,
+        });
       },
     }),
   ),
