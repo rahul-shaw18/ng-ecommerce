@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
-import { ProductCard } from "../../components/product-card/product-card";
-import { BackButton } from "../../components/back-button/back-button";
+import { ProductCard } from '../../components/product-card/product-card';
+import { BackButton } from '../../components/back-button/back-button';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton, MatAnchor, MatButton } from '@angular/material/button';
-import { EmptyWishlist } from "./empty-wishlist/empty-wishlist";
-
+import { EmptyWishlist } from './empty-wishlist/empty-wishlist';
+import { SeoManager } from '../../services/seo-manager';
 
 @Component({
   selector: 'app-my-wishlist',
@@ -14,6 +14,13 @@ import { EmptyWishlist } from "./empty-wishlist/empty-wishlist";
   styles: ``,
 })
 export default class MyWishlist {
-    store = inject(EcommerceStore);
+  store = inject(EcommerceStore);
+  protected seoManager = inject(SeoManager);
 
+  constructor() {
+    this.seoManager.updateSeoTags({
+      title: 'My Wishlist - NgEcommerce',
+      description: 'View your wishlist items.',
+    });
+  }
 }
